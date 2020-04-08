@@ -5,27 +5,36 @@
 # LICENSE file in the root directory of this source tree.
 #
 
-import json,sys,os
+import json
+import os
+import sys
 
 output_path = 'output/'
 
+
 def json_save(path, obj):
-	with open(path, 'w') as f:
-		json.dump(obj, f)
+    with open(path, 'w') as f:
+        json.dump(obj, f)
+
 
 def os_mkdir(path):
-	if not os.path.exists(path):
-		os.mkdir(path)
+    if not os.path.exists(path):
+        os.mkdir(path)
+
 
 def makePartialJsons(obj):
-	for k in obj['data']:
-		os_mkdir(output_path)
-		output_f = os.path.join(output_path, k+'.json')
-		json_save(output_f, obj['data'][k])
-		print(k)
+    for k in obj['data']:
+        img_idx = int(k.split('_')[-1])
+        if img_idx >= 3000:
+            continue
+        output_f = os.path.join(output_path, k+'.json')
+        json_save(output_f, obj['data'][k])
+        print(k)
 
-if __name__=='__main__' and len(sys.argv) > 1:
+
+if __name__ == '__main__' and len(sys.argv) > 1:
     path = sys.argv[1]
+    os_mkdir(output_path)
     with open(path, 'r') as f:
         obj = json.load(f)
         makePartialJsons(obj)
